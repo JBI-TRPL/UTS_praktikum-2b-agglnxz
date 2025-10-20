@@ -13,7 +13,8 @@ class PosScreen extends StatefulWidget {
 class _PosScreenState extends State<PosScreen> {
   late Future<List<Product>> _productsFuture;
   Map<int, int> _cart = {}; // Key: productId, Value: quantity
-
+  int _totalAmount = 0;
+  List<Product> _selectedProducts = [];
   @override
   void initState() {
     super.initState();
@@ -22,7 +23,21 @@ class _PosScreenState extends State<PosScreen> {
 
   void _loadProducts() {
     setState(() {
-      _productsFuture = DatabaseHelper.instance.getProducts();
+      _productsFuture = DatabaseHelper.instance.getProducts().then((data){
+      _selectedProducts = data;
+      return data;
+      });
+    });
+  }
+
+  void _updateAmount(int productId, int quantity) {
+     int total = 0;
+   for (var entry in _cart.entries) {
+      final product = _selectedProducts.firstWhere((p) => p.id == entry.key);
+      total += product.price * entry.value;
+    }
+    setState(() {
+      _totalAmount = total;
     });
   }
 
@@ -34,11 +49,13 @@ class _PosScreenState extends State<PosScreen> {
         _cart.remove(productId);
       }
     });
+    _updateAmount( productId, quantity);
   }
 
   void _resetCart() {
     setState(() {
       _cart.clear();
+      _totalAmount = 0;
     });
   }
 
@@ -155,7 +172,22 @@ class _PosScreenState extends State<PosScreen> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       color: Colors.white,
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         children: [
+          const Text("Total:", 
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+          "Rp. ${_totalAmount.toStringAsFixed(0)}",
+          style: const TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue),
+          ),
+        ],
+        ),
+        const SizedBox(height: 16),
+       Row(
         children: [
           Expanded(
             child: ElevatedButton(
@@ -188,10 +220,12 @@ class _PosScreenState extends State<PosScreen> {
                   foregroundColor: Colors.red,
                   side: const BorderSide(color: Colors.red),
                   padding: const EdgeInsets.symmetric(vertical: 16)),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+         ],
+       ),
+     ],
+    )
+  );
+}
 }

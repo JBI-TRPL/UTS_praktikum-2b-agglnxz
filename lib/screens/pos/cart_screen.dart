@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pos_app/database/database_helper.dart';
 import 'package:pos_app/models/product_model.dart';
 import 'package:pos_app/screens/pos/payment_screen.dart';
+import 'package:badges/badges.dart' as bagdes;
 
 class CartScreen extends StatefulWidget {
   final Map<int, int> cart; // productId -> quantity
@@ -17,11 +18,13 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   late Future<List<Map<String, dynamic>>> _cartDetailsFuture;
   int _total = 0;
+  int _itemCount = 0;
 
   @override
   void initState() {
     super.initState();
     _cartDetailsFuture = _getCartDetails();
+    _itemCount = widget.cart.length;
   }
 
   Future<List<Map<String, dynamic>>> _getCartDetails() async {
@@ -56,7 +59,22 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('TOTAL')),
+      appBar: AppBar(
+        title: const Text('TOTAL'),
+      actions: [
+        if (_itemCount > 0)
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0,top: 8.0),
+            child: bagdes.Badge(
+              badgeContent:Text(
+                '$_itemCount',
+                style: const TextStyle(fontSize: 10, color: Colors.white),
+              ),
+              child:const Icon(Icons.shopping_cart_outlined),
+              ),
+            ),
+         ],
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _cartDetailsFuture,
         builder: (context, snapshot) {
