@@ -1,1 +1,7 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/58YCLsqW)
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Psgen4Dj)
+
+# Ujian Praktikum Flutter POS SQLite
+**Nama Mahasiswa:** Galang Bagus Erkamta
+**NIM:** 362458302015
+**Kelompok:** 2
+
